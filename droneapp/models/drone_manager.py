@@ -281,6 +281,18 @@ class DroneManager(object, metaclass=Singleton):
             return None
         return self.send_command(f'flip {direction}')
 
+    def flip_front(self): #ドローンを前転させる
+        return self.flip('f')
+
+    def flip_back(self): #ドローンを後転させる  
+        return self.flip('b')
+
+    def flip_left(self): #ドローンを左転させる
+        return self.flip('l')
+
+    def flip_right(self): #ドローンを右転させる
+        return self.flip('r')
+
     # パトロールモードを開始するメソッド
     def patrol(self):
         if not self.is_patrol:
@@ -360,6 +372,11 @@ class DroneManager(object, metaclass=Singleton):
                     logger.error({'action': 'video_binary_generator', 'ex': ex})
                     continue
                 if not frame:
+                    logger.warning(f'video_binary_generator: No frame data received')
+                    continue
+                
+                if len(frame) != FRAME_SIZE:
+                    logger.warning(f'video_binary_generator: Expected {FRAME_SIZE} bytes, got {len(frame)} bytes')
                     continue
 
                 frame = np.frombuffer(frame, np.uint8).reshape(FRAME_Y, FRAME_X, 3)  # バイト列をNumPy配列に変換

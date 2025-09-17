@@ -73,7 +73,7 @@ class CourseB(BaseCourse):
                 self.status = 45  # 10秒から15秒の間にフリップしたら次へ進む
 
         if self.status == 30:
-            self.drone.frip_back()
+            self.drone.flip_back()
 
         if self.status == 40:
             self.drone.forward(30)

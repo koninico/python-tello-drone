@@ -5,6 +5,8 @@ from flask import render_template
 from flask import request
 from flask import Response
 
+import droneapp.models.course
+
 from droneapp.models.drone_manager import DroneManager # ドローン管理クラスをインポート
 
 import config
@@ -194,3 +196,35 @@ def video_feed():
 
 def run():
     app.run(host=config.WEB_ADDRESS, port=config.WEB_PORT, threaded=True)
+
+def get_courses(course_id=None):
+    drone = get_drone()
+    courses = droneapp.models.course.get_courses(drone)
+    if course_id:
+        return courses.get(course_id)
+    return courses
+
+@app.route('/games/shake/')
+def game_shake():
+    courses = get_courses()
+    return render_template('games/shake.html', courses=courses)
+
+@app.route('/games/shake/start', methods=['GET', 'POST'])
+def shake_start():
+    # course_id = request.args.get('id')
+    course_id = request.form.get('id')
+    course = get_courses(int(course_id))
+    course.start()
+    return jsonify(result='started'), 200
+
+@app.route('/games/shake/run', methods=['GET', 'POST'])
+def shake_run():
+    # course_id = request.args.get('id')
+    course_id = request.form.get('id')
+    course = get_courses(int(course_id))
+    course.run()
+    return jsonify(
+        elapsed=course.elapsed,
+        status=course.status,
+        running=course.is_running
+    ), 200
