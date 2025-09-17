@@ -6,9 +6,21 @@
   <img width="100%" src="/static/img/drone.png" />
 </div>
 
-<ul data-role="listview">
-  <li><a href="/controller/">Controller</a></li>
-  <li><a href="/games/shake/">Shake Game</a></li>
-</ul>
+{% if current_user.is_authenticated %}
+  <div data-role="header" style="text-align: center; margin: 15px 0;">
+    <p>ようこそ、{{ current_user.username }}さん！</p>
+    <a href="/logout" data-role="button" data-icon="power" data-mini="true" style="width: 120px; margin: 0 auto;">ログアウト</a>
+  </div>
+  
+  <ul data-role="listview">
+    <li><a href="/controller/">Controller</a></li>
+    <li><a href="/games/shake/">Shake Game</a></li>
+  </ul>
+{% else %}
+  <div style="text-align: center; margin: 20px;">
+    <p>ドローンを操作するには、まずログインしてください。</p>
+    <a href="/login" data-role="button" data-icon="lock" data-theme="b">ログイン</a>
+  </div>
+{% endif %}
 
 {% endblock %}

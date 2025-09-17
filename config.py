@@ -12,5 +12,10 @@ LOG_FILE = 'ptell.log'
 # Flaskアプリケーションの初期化
 app = Flask(__name__, template_folder=TEMPLATES, static_folder=STATIC_FOLDER)
 
+# セッション管理のためのSECRET_KEY
+# 本番環境では環境変数から読み込むことを推奨
+import os
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'drone-control-secure-key-2024-change-in-production')
+
 if DEBUG:
     app.debug = DEBUG
